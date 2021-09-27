@@ -1,0 +1,27 @@
+{
+  "name": "go-license-scraper",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/akm/go-license-scraper.git"
+  },
+  "keywords": [
+    "go",
+    "golang",
+    "library",
+    "module",
+    "license",
+    "scraping"
+  ],
+  "author": "akm",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/akm/go-license-scraper/issues"
+  },
+  "homepage": "https://github.com/akm/go-license-scraper#readme"
+}
