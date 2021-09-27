@@ -28,6 +28,9 @@
   ],
   "author": "akm",
   "license": "MIT",
+  "bin": {
+    "go-lisence-scraper": "./bin/go-lisence-scraper.js"
+  },
   "bugs": {
     "url": "https://github.com/akm/go-license-scraper/issues"
   },
