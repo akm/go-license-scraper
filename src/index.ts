@@ -58,10 +58,10 @@ process.stdin.on('end', () => {
 
           // await page.pause();
           try {
-            const lisence = (
+            const license = (
               await page.$eval(selector, el => el.textContent)
             )?.trim();
-            process.stdout.write(JSON.stringify({path, version, lisence, url}));
+            process.stdout.write(JSON.stringify({path, version, license, url}));
             process.stdout.write('\n');
             success = true;
             break;
