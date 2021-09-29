@@ -1,6 +1,6 @@
 {
   "name": "go-license-scraper",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,9 @@
   ],
   "author": "akm",
   "license": "MIT",
+  "bin": {
+    "go-license-scraper": "./bin/go-license-scraper.js"
+  },
   "bugs": {
     "url": "https://github.com/akm/go-license-scraper/issues"
   },
