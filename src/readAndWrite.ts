@@ -1,9 +1,11 @@
 import {Scraper} from './Scraper';
 import {Module} from './Module';
+import {Formatter} from './Formatter';
 
 export const readAndWrite = async (
   scraper: Scraper,
   line: string,
+  formatter: Formatter,
   dest: NodeJS.WriteStream
 ): Promise<void> => {
   if (!line.trim()) return;
@@ -11,7 +13,8 @@ export const readAndWrite = async (
   if (mod.main) return; // Main module is not targeted
   try {
     const license = await scraper.process(mod);
-    dest.write(JSON.stringify(license));
+    const output = formatter.format(license);
+    dest.write(output);
     dest.write('\n');
   } catch (
     err: any // eslint-disable-line @typescript-eslint/no-explicit-any
