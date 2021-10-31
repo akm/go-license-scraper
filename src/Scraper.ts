@@ -1,4 +1,5 @@
 import {Page} from 'playwright';
+import {UrlAndSelector} from './UrlAndSelector';
 
 export class Scraper {
   constructor(private readonly page: Page) {}
@@ -12,5 +13,31 @@ export class Scraper {
       await this.page.$eval(selector, el => el.textContent)
     )?.trim();
     return license;
+  }
+
+  async run(
+    patterns: UrlAndSelector[]
+  ): Promise<{license: string; url: string}> {
+    const errors: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
+    for (const ptn of patterns) {
+      try {
+        const license = await this.scrape(ptn.url, ptn.selector);
+        if (license !== undefined && license !== '') {
+          return {
+            license,
+            url: ptn.url,
+          };
+        }
+      } catch (
+        err: any // eslint-disable-line @typescript-eslint/no-explicit-any
+      ) {
+        errors.push(err);
+      }
+    }
+    throw new Error(
+      `failed to get license at ${patterns
+        .map(i => i.url)
+        .join(',')} because of ${errors}`
+    );
   }
 }
