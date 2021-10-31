@@ -2,6 +2,7 @@ import {chromium} from 'playwright';
 import {Scraper} from './Scraper';
 import {Builder} from './Builder';
 import {ModVersion} from './ModVersion';
+import {License} from './License';
 
 export const execute = async (linesText: string): Promise<void> => {
   const browser = await chromium.launch();
@@ -18,7 +19,7 @@ export const execute = async (linesText: string): Promise<void> => {
       const patterns = new Builder(mod).patterns;
       try {
         const r = await scraper.run(patterns);
-        const license = {
+        const license: License = {
           path: mod.path,
           version: mod.version,
           license: r.license,
