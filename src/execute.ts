@@ -1,16 +1,10 @@
-import {chromium} from 'playwright';
 import {Scraper} from './Scraper';
 import {Builder} from './Builder';
 import {ModVersion} from './ModVersion';
 import {License} from './License';
 
 export const execute = async (linesText: string): Promise<void> => {
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
-
-  const scraper = new Scraper(page);
-
-  try {
+  await Scraper.process(async scraper => {
     const lines = linesText.split('\n');
     for (const line of lines) {
       if (!line.trim()) continue;
@@ -33,7 +27,5 @@ export const execute = async (linesText: string): Promise<void> => {
         process.stderr.write(err.message);
       }
     }
-  } finally {
-    await browser.close();
-  }
+  });
 };
