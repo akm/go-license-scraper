@@ -50,7 +50,7 @@ process.stdin.on('end', () => {
         }
 
         let success = false;
-        const errors: any[] = [];
+        const errors: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
         for (const url of urls) {
           const selector = urlToSelector[url];
           await page.goto(url);
@@ -65,7 +65,9 @@ process.stdin.on('end', () => {
             process.stdout.write('\n');
             success = true;
             break;
-          } catch (err: any) {
+          } catch (
+            err: any // eslint-disable-line @typescript-eslint/no-explicit-any
+          ) {
             errors.push(err);
           }
         }
