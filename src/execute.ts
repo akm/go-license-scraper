@@ -12,7 +12,7 @@ export const execute = async (linesText: string): Promise<void> => {
       const mod = ModVersion.parse(line);
       const patterns = new Builder(mod).patterns;
       try {
-        const r = await scraper.run(patterns);
+        const r = await scraper.getLicenseAndUrl(patterns);
         const license: License = {
           path: mod.path,
           version: mod.version,

@@ -27,7 +27,7 @@ export class Scraper {
     return license;
   }
 
-  async run(
+  async getLicenseAndUrl(
     patterns: UrlAndSelector[]
   ): Promise<{license: string; url: string}> {
     const errors: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
