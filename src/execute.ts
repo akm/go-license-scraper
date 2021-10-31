@@ -22,7 +22,7 @@ export const execute = async (linesText: string): Promise<void> => {
       const errors: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
       for (const ptn of patterns) {
         try {
-          const license = await scraper.run(ptn.url, ptn.selector);
+          const license = await scraper.scrape(ptn.url, ptn.selector);
           process.stdout.write(
             JSON.stringify({
               path: mod.path,

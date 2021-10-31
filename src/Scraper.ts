@@ -3,7 +3,7 @@ import {Page} from 'playwright';
 export class Scraper {
   constructor(private readonly page: Page) {}
 
-  async run(url: string, selector: string): Promise<string | undefined> {
+  async scrape(url: string, selector: string): Promise<string | undefined> {
     await this.page.goto(url);
     await this.page.waitForLoadState();
 
