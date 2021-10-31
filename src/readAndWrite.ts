@@ -1,5 +1,5 @@
 import {Scraper} from './Scraper';
-import {ModVersion} from './ModVersion';
+import {Module} from './Module';
 
 export const readAndWrite = async (
   scraper: Scraper,
@@ -7,7 +7,7 @@ export const readAndWrite = async (
   dest: NodeJS.WriteStream
 ): Promise<void> => {
   if (!line.trim()) return;
-  const mod = ModVersion.parse(line);
+  const mod = Module.parse(line);
   if (mod.main) return; // Main module is not targeted
   try {
     const license = await scraper.process(mod);

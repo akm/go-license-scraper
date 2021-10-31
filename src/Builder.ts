@@ -1,4 +1,4 @@
-import {ModVersion} from './ModVersion';
+import {Module} from './Module';
 import {UrlAndSelector} from './UrlAndSelector';
 
 const version0 = /^v0\.0\.0-/;
@@ -8,7 +8,7 @@ const pkgGoDevSelector =
 const githubSelector = 'h3:has-text("License") + .mt-3 a';
 
 export class Builder {
-  constructor(readonly modVersion: ModVersion) {}
+  constructor(readonly modVersion: Module) {}
 
   get path(): string {
     return this.modVersion.path;

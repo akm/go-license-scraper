@@ -1,4 +1,4 @@
-export type ModVersion = {
+export type Module = {
   readonly path: string; // "Path"
   readonly version: string; // "Version"
   readonly main: boolean; // "Main"
@@ -9,8 +9,8 @@ export type ModVersion = {
   // readonly goVersion: string; // "GoVersion"
 };
 
-class ModVersionCompanion {
-  parse(line: string): ModVersion {
+class ModuleCompanion {
+  parse(line: string): Module {
     const d = JSON.parse(line);
     const path = d['Path'] as string;
     const version = d['Version'] as string;
@@ -19,4 +19,4 @@ class ModVersionCompanion {
   }
 }
 
-export const ModVersion = new ModVersionCompanion();
+export const Module = new ModuleCompanion();
