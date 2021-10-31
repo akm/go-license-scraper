@@ -1,7 +1,7 @@
 import {Scraper} from './Scraper';
 import {ModVersion} from './ModVersion';
 
-export const execute = async (linesText: string): Promise<void> => {
+export const readAndWrite = async (linesText: string): Promise<void> => {
   await Scraper.process(async scraper => {
     const lines = linesText.split('\n');
     for (const line of lines) {
