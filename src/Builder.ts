@@ -1,15 +1,11 @@
 import {ModVersion} from './ModVersion';
+import {UrlAndSelector} from './UrlAndSelector';
 
 const version0 = /^v0\.0\.0-/;
 
 const pkgGoDevSelector =
   '[data-test-id=UnitHeader-licenses] [data-test-id=UnitHeader-license]';
 const githubSelector = 'h3:has-text("License") + .mt-3 a';
-
-type UrlAndSelector = {
-  readonly url: string;
-  readonly selector: string;
-};
 
 export class Builder {
   constructor(readonly modVersion: ModVersion) {}
