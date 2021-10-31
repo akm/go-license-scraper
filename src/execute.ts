@@ -1,6 +1,7 @@
 import {chromium} from 'playwright';
 import {Scraper} from './Scraper';
 import {Builder} from './Builder';
+import {ModVersion} from './ModVersion';
 
 export const execute = async (linesText: string): Promise<void> => {
   const browser = await chromium.launch();
@@ -13,7 +14,8 @@ export const execute = async (linesText: string): Promise<void> => {
     for (const line of lines) {
       if (!line.trim()) continue;
 
-      const b = Builder.parseJson(line);
+      const mod = ModVersion.parse(line);
+      const b = new Builder(mod);
       const patterns = b.patterns;
 
       let success = false;
@@ -23,8 +25,8 @@ export const execute = async (linesText: string): Promise<void> => {
           const license = await scraper.run(ptn.url, ptn.selector);
           process.stdout.write(
             JSON.stringify({
-              path: b.modVersion.path,
-              version: b.modVersion.version,
+              path: mod.path,
+              version: mod.version,
               license,
               url: ptn.url,
             })

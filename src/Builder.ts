@@ -1,13 +1,10 @@
+import {ModVersion} from './ModVersion';
+
 const version0 = /^v0\.0\.0-/;
 
 const pkgGoDevSelector =
   '[data-test-id=UnitHeader-licenses] [data-test-id=UnitHeader-license]';
 const githubSelector = 'h3:has-text("License") + .mt-3 a';
-
-type ModVersion = {
-  readonly path: string;
-  readonly version: string;
-};
 
 type UrlAndSelector = {
   readonly url: string;
@@ -15,13 +12,6 @@ type UrlAndSelector = {
 };
 
 export class Builder {
-  static parseJson(line: string): Builder {
-    const d = JSON.parse(line);
-    const path = d['Path'] as string;
-    const version = d['Version'] as string;
-    return new Builder({path, version});
-  }
-
   constructor(readonly modVersion: ModVersion) {}
 
   get path(): string {
