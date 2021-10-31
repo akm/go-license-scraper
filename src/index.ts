@@ -13,7 +13,7 @@ process.stdin.on('end', () => {
   Scraper.process(async scraper => {
     const lines = input_string.split('\n');
     for (const line of lines) {
-      await readAndWrite(scraper, line);
+      await readAndWrite(scraper, line, process.stdout);
     }
   });
 });
