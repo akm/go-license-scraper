@@ -1,4 +1,5 @@
 import {readAndWrite} from './readAndWrite';
+import {Scraper} from './Scraper';
 
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
@@ -9,5 +10,10 @@ process.stdin.on('data', chunk => {
 });
 
 process.stdin.on('end', () => {
-  readAndWrite(input_string);
+  Scraper.process(async scraper => {
+    const lines = input_string.split('\n');
+    for (const line of lines) {
+      await readAndWrite(scraper, line);
+    }
+  });
 });

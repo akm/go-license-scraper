@@ -11,7 +11,7 @@ export class Scraper {
 
     const scraper = new Scraper(page);
     try {
-      f(scraper);
+      await f(scraper);
     } finally {
       await browser.close();
     }
