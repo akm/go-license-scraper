@@ -1,4 +1,7 @@
 import {chromium, Page} from 'playwright';
+import {Builder} from './Builder';
+import {License} from './License';
+import {ModVersion} from './ModVersion';
 import {UrlAndSelector} from './UrlAndSelector';
 
 export class Scraper {
@@ -51,5 +54,16 @@ export class Scraper {
         .map(i => i.url)
         .join(',')} because of ${errors}`
     );
+  }
+
+  async process(mod: ModVersion): Promise<License> {
+    const patterns = new Builder(mod).patterns;
+    const r = await this.getLicenseAndUrl(patterns);
+    return {
+      path: mod.path,
+      version: mod.version,
+      license: r.license,
+      url: r.url,
+    };
   }
 }

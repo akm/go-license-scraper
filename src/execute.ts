@@ -1,7 +1,5 @@
 import {Scraper} from './Scraper';
-import {Builder} from './Builder';
 import {ModVersion} from './ModVersion';
-import {License} from './License';
 
 export const execute = async (linesText: string): Promise<void> => {
   await Scraper.process(async scraper => {
@@ -10,15 +8,8 @@ export const execute = async (linesText: string): Promise<void> => {
       if (!line.trim()) continue;
 
       const mod = ModVersion.parse(line);
-      const patterns = new Builder(mod).patterns;
       try {
-        const r = await scraper.getLicenseAndUrl(patterns);
-        const license: License = {
-          path: mod.path,
-          version: mod.version,
-          license: r.license,
-          url: r.url,
-        };
+        const license = await scraper.process(mod);
         process.stdout.write(JSON.stringify(license));
         process.stdout.write('\n');
       } catch (
