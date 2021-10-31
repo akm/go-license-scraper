@@ -1,10 +1,13 @@
 import {chromium} from 'playwright';
+import {Scraper} from './Scraper';
 
 const version0 = /^v0\.0\.0-/;
 
 export const execute = async (linesText: string): Promise<void> => {
   const browser = await chromium.launch();
   const page = await browser.newPage();
+
+  const scraper = new Scraper(page);
 
   const pkgGoDevSelector =
     '[data-test-id=UnitHeader-licenses] [data-test-id=UnitHeader-license]';
@@ -40,15 +43,8 @@ export const execute = async (linesText: string): Promise<void> => {
       let success = false;
       const errors: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
       for (const url of urls) {
-        const selector = urlToSelector[url];
-        await page.goto(url);
-        await page.waitForLoadState();
-
-        // await page.pause();
         try {
-          const license = (
-            await page.$eval(selector, el => el.textContent)
-          )?.trim();
+          const license = await scraper.run(url, urlToSelector[url]);
           process.stdout.write(JSON.stringify({path, version, license, url}));
           process.stdout.write('\n');
           success = true;
