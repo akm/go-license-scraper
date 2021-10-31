@@ -4,7 +4,8 @@ go-license-scraper collects go module license by scraping http://pkg.go.dev (or 
 
 ## Prerequisite
 
-- [jq](https://stedolan.github.io/jq/)
+- [Node.js](https://nodejs.org/)
+- Your Golang project
 
 ## Install
 
@@ -16,5 +17,5 @@ $ npm install -g go-license-scraper
 
 ```
 $ cd path/to/your/directory/of/go.mod
-$ go list -m -json all | jq -c 'select(.Main != true)' | go-license-scraper | jq -r '[.path, .version, .license, .url] | @csv'
+$ go list -m -json all | go-license-scraper
 ```
