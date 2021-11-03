@@ -1,8 +1,17 @@
 import {spawn} from 'child_process';
+import {createWriteStream} from 'fs';
 
 import {CsvFormatter} from './Formatter';
 import {readAndWrite} from './readAndWrite';
 import {Scraper} from './Scraper';
+
+if (process.argv.length < 3) {
+  process.stderr.write('Usage: go-license-scraper PATH_TO_LICENSE_CSV\n');
+  const exit = process.exit;
+  exit(1);
+}
+
+const dest = createWriteStream(process.argv[2]);
 
 const golist = spawn('go', ['list', '-m ', '-json', 'all'], {shell: true});
 
@@ -22,7 +31,7 @@ golist.stdout.on('end', () => {
       return r;
     });
     for (const line of lines) {
-      await readAndWrite(scraper, line, formatter, process.stdout);
+      await readAndWrite(scraper, line, formatter, dest);
     }
   });
 });

@@ -1,3 +1,5 @@
+import {WriteStream} from 'fs';
+
 import {Scraper} from './Scraper';
 import {Module} from './Module';
 import {Formatter} from './Formatter';
@@ -6,7 +8,7 @@ export const readAndWrite = async (
   scraper: Scraper,
   line: string,
   formatter: Formatter,
-  dest: NodeJS.WriteStream
+  dest: WriteStream
 ): Promise<void> => {
   if (!line.trim()) return;
   const mod = Module.parse(line);
