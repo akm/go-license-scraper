@@ -1,37 +1,50 @@
 import {spawn} from 'child_process';
-import {createWriteStream} from 'fs';
+import {createWriteStream, existsSync} from 'fs';
 
 import {CsvFormatter} from './Formatter';
+import {Cache, CacheProcessor} from './Cache';
 import {readAndWrite} from './readAndWrite';
 import {Scraper} from './Scraper';
 
+const exit = process.exit;
 if (process.argv.length < 3) {
   process.stderr.write('Usage: go-license-scraper PATH_TO_LICENSE_CSV\n');
-  const exit = process.exit;
   exit(1);
 }
 
-const dest = createWriteStream(process.argv[2]);
+const main = async () => {
+  const csvPath = process.argv[2];
 
-const golist = spawn('go', ['list', '-m ', '-json', 'all'], {shell: true});
+  const formatter = new CsvFormatter();
 
-let input_string = '';
+  const cache = existsSync(csvPath)
+    ? await formatter.load(csvPath)
+    : new Cache();
 
-golist.stdout.on('data', chunk => {
-  input_string += chunk;
-});
+  const dest = createWriteStream(csvPath);
 
-golist.stdout.on('end', () => {
-  Scraper.process(async scraper => {
-    const formatter = new CsvFormatter();
-    const lines = input_string.split('}\n{').map(i => {
-      let r = i.trim();
-      if (!r.startsWith('{')) r = '{' + r;
-      if (!r.endsWith('}')) r = r + '}';
-      return r;
-    });
-    for (const line of lines) {
-      await readAndWrite(scraper, line, formatter, dest);
-    }
+  const golist = spawn('go', ['list', '-m ', '-json', 'all'], {shell: true});
+
+  let input_string = '';
+
+  golist.stdout.on('data', chunk => {
+    input_string += chunk;
   });
-});
+
+  golist.stdout.on('end', () => {
+    Scraper.process(async scraper => {
+      const processor = new CacheProcessor(scraper, cache);
+      const lines = input_string.split('}\n{').map(i => {
+        let r = i.trim();
+        if (!r.startsWith('{')) r = '{' + r;
+        if (!r.endsWith('}')) r = r + '}';
+        return r;
+      });
+      for (const line of lines) {
+        await readAndWrite(processor, line, formatter, dest);
+      }
+    });
+  });
+};
+
+main();
