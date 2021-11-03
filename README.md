@@ -17,5 +17,5 @@ $ npm install -g go-license-scraper
 
 ```
 $ cd path/to/your/directory/of/go.mod
-$ go list -m -json all | go-license-scraper
+$ go-license-scraper PATH/TO/LICENSES.csv
 ```
