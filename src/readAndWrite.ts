@@ -1,11 +1,11 @@
 import {WriteStream} from 'fs';
 
-import {Scraper} from './Scraper';
 import {Module} from './Module';
 import {Formatter} from './Formatter';
+import {Processor} from './Processor';
 
 export const readAndWrite = async (
-  scraper: Scraper,
+  processor: Processor,
   line: string,
   formatter: Formatter,
   dest: WriteStream
@@ -14,7 +14,7 @@ export const readAndWrite = async (
   const mod = Module.parse(line);
   if (mod.main) return; // Main module is not targeted
   try {
-    const license = await scraper.process(mod);
+    const license = await processor.process(mod);
     const output = formatter.format(license);
     dest.write(output);
     dest.write('\n');

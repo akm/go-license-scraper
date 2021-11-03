@@ -2,9 +2,10 @@ import {chromium, Page} from 'playwright';
 import {Builder} from './Builder';
 import {License} from './License';
 import {Module} from './Module';
+import {Processor} from './Processor';
 import {UrlAndSelector} from './UrlAndSelector';
 
-export class Scraper {
+export class Scraper implements Processor {
   static async process(f: {(scraper: Scraper): Promise<void>}): Promise<void> {
     const browser = await chromium.launch();
     const page = await browser.newPage();
