@@ -10,7 +10,7 @@ go-license-scraper collects go module license by scraping http://pkg.go.dev (or 
 ## Install
 
 ```
-$ npm install -g go-license-scraper
+$ npm install --location=global go-license-scraper
 ```
 
 ## Usage
