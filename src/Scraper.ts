@@ -6,13 +6,16 @@ import {Processor} from './Processor';
 import {UrlAndSelector} from './UrlAndSelector';
 
 export class Scraper implements Processor {
-  static async process(f: {(scraper: Scraper): Promise<void>}): Promise<void> {
+  static async process(
+    excludedModoules: string[],
+    f: {(scraper: Scraper): Promise<void>}
+  ): Promise<void> {
     // https://playwright.dev/docs/api/class-testoptions#test-options-channel
     const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
     const browser = await chromium.launch({channel: browserChannel});
     const page = await browser.newPage();
 
-    const scraper = new Scraper(page);
+    const scraper = new Scraper(page, excludedModoules);
     try {
       await f(scraper);
     } finally {
@@ -20,7 +23,10 @@ export class Scraper implements Processor {
     }
   }
 
-  constructor(private readonly page: Page) {}
+  constructor(
+    private readonly page: Page,
+    readonly excludedModoules: string[]
+  ) {}
 
   async scrape(url: string, selector: string): Promise<string | undefined> {
     await this.page.goto(url);
@@ -60,6 +66,15 @@ export class Scraper implements Processor {
   }
 
   async process(mod: Module): Promise<License> {
+    if (this.excludedModoules.includes(mod.path)) {
+      return {
+        path: mod.path,
+        version: '',
+        license: '(included)',
+        url: '',
+      };
+    }
+
     const patterns = new Builder(mod).patterns;
     const r = await this.getLicenseAndUrl(patterns);
     return {

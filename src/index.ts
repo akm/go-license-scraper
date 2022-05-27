@@ -1,4 +1,4 @@
-import {spawn} from 'child_process';
+import {spawn, execSync, execFileSync} from 'child_process';
 import {createWriteStream, existsSync} from 'fs';
 
 import {CsvFormatter} from './Formatter';
@@ -21,6 +21,11 @@ const main = async () => {
     ? await formatter.load(csvPath)
     : new Cache();
 
+  // const includedPackages =
+  const excludedModoules = execFileSync('go', ['list'], {encoding: 'utf8'})
+    .split('\n')
+    .filter(i => i.trim());
+
   const dest = createWriteStream(csvPath);
 
   const golist = spawn('go', ['list', '-m ', '-json', 'all'], {shell: true});
@@ -32,7 +37,7 @@ const main = async () => {
   });
 
   golist.stdout.on('end', () => {
-    Scraper.process(async scraper => {
+    Scraper.process(excludedModoules, async scraper => {
       const processor = new CacheProcessor(scraper, cache);
       const lines = input_string.split('}\n{').map(i => {
         let r = i.trim();
