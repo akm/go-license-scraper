@@ -7,7 +7,9 @@ import {UrlAndSelector} from './UrlAndSelector';
 
 export class Scraper implements Processor {
   static async process(f: {(scraper: Scraper): Promise<void>}): Promise<void> {
-    const browser = await chromium.launch();
+    // https://playwright.dev/docs/api/class-testoptions#test-options-channel
+    const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
+    const browser = await chromium.launch({channel: browserChannel});
     const page = await browser.newPage();
 
     const scraper = new Scraper(page);
