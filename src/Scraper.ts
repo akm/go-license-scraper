@@ -1,4 +1,4 @@
-import {chromium, Page} from 'playwright';
+import {chromium, Page} from 'playwright-core';
 import {Builder} from './Builder';
 import {License} from './License';
 import {Module} from './Module';
