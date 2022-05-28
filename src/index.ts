@@ -1,4 +1,4 @@
-import {spawn, execSync, execFileSync} from 'child_process';
+import {spawn, execFileSync} from 'child_process';
 import {createWriteStream, existsSync} from 'fs';
 
 import {CsvFormatter} from './Formatter';
