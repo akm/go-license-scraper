@@ -38,8 +38,7 @@ export class Scraper implements Processor {
     await this.page.waitForLoadState();
 
     // await page.pause();
-    const license = (await this.page.textContent(selector))?.trim();
-    return license;
+    return (await this.page.textContent(selector))?.trim();
   }
 
   async getLicenseAndUrl(
