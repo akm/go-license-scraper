@@ -12,7 +12,12 @@ export class Scraper implements Processor {
   ): Promise<void> {
     // https://playwright.dev/docs/api/class-testoptions#test-options-channel
     const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
-    const browser = await chromium.launch({channel: browserChannel});
+    const headless = !(
+      process.env.HEADED === 'true' ||
+      process.env.HEADED === 'on' ||
+      process.env.HEADED === '1'
+    );
+    const browser = await chromium.launch({channel: browserChannel, headless});
     const page = await browser.newPage();
 
     const scraper = new Scraper(page, excludedModoules);
@@ -33,10 +38,7 @@ export class Scraper implements Processor {
     await this.page.waitForLoadState();
 
     // await page.pause();
-    const license = (
-      await this.page.$eval(selector, el => el.textContent)
-    )?.trim();
-    return license;
+    return (await this.page.textContent(selector))?.trim();
   }
 
   async getLicenseAndUrl(
