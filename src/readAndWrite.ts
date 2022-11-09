@@ -13,6 +13,7 @@ export const readAndWrite = async (
   if (!line.trim()) return;
   const mod = Module.parse(line);
   if (mod.main) return; // Main module is not targeted
+  if (mod.replace?.path.startsWith('.')) return; // Skip replaced module with local filepath
   try {
     const license = await processor.process(mod);
     const output = formatter.format(license);
