@@ -22,9 +22,15 @@ const main = async () => {
     : new Cache();
 
   // const includedPackages =
-  const excludedModoules = execFileSync('go', ['list'], {encoding: 'utf8'})
-    .split('\n')
-    .filter(i => i.trim());
+  const excludedModoules = (() => {
+    try {
+      return execFileSync('go', ['list'], {encoding: 'utf8'})
+        .split('\n')
+        .filter(i => i.trim());
+    } catch (e) {
+      return [];
+    }
+  })();
 
   const dest = createWriteStream(csvPath);
 
