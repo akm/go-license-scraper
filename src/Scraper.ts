@@ -60,11 +60,10 @@ export class Scraper implements Processor {
         errors.push(err);
       }
     }
-    throw new Error(
-      `failed to get license at ${patterns
-        .map(i => i.url)
-        .join(',')} because of ${errors}`
-    );
+    return {
+      license: '(unknown)',
+      url: patterns[0].url,
+    };
   }
 
   async process(mod: Module): Promise<License> {
