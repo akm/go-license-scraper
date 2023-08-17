@@ -34,8 +34,10 @@ export class Scraper implements Processor {
   ) {}
 
   async scrape(url: string, selector: string): Promise<string | undefined> {
-    await this.page.goto(url);
-    await this.page.waitForLoadState();
+    // Sometimes waitForLoadState('load') waits too long for external resources like https://slackin.goswagger.io/badge.svg
+    // So, use documentloaded instead of load and waitForSelector to wait for the selector.
+    await this.page.goto(url, {waitUntil: 'domcontentloaded'});
+    await this.page.waitForSelector(selector);
 
     // await page.pause();
     return (await this.page.textContent(selector))?.trim();
@@ -60,6 +62,9 @@ export class Scraper implements Processor {
         errors.push(err);
       }
     }
+
+    process.stderr.write(errors.map(e => `${e}`).join('\n'));
+
     return {
       license: '(unknown)',
       url: patterns[0].url,
