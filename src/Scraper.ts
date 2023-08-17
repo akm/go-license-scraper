@@ -60,6 +60,9 @@ export class Scraper implements Processor {
         errors.push(err);
       }
     }
+
+    process.stderr.write(errors.map(e => `${e}`).join('\n'));
+
     return {
       license: '(unknown)',
       url: patterns[0].url,
