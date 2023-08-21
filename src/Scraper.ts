@@ -46,6 +46,10 @@ export class Scraper implements Processor {
     await this.page.goto(url, {waitUntil: 'domcontentloaded'});
     debug('scrape #1 ${selector} waitForSelector start');
 
+    // Request “github.com/aws/aws-sdk-go-v2@v1.20.3” というようなボタンが表示されている場合は、スキップ
+    if (await this.page.isVisible('[data-test-id="fetch-button"]')) {
+      throw new Error(`skip ${url} the page is not ready`);
+    }
     await this.page.waitForSelector(selector);
     debug('scrape #2 ${selector} waitForSelector finish');
 
