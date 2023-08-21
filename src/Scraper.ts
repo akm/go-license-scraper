@@ -34,13 +34,32 @@ export class Scraper implements Processor {
   ) {}
 
   async scrape(url: string, selector: string): Promise<string | undefined> {
+    const debug =
+      process.env.DEBUG === 'true'
+        ? (s: string) =>
+            process.stderr.write(`${new Date().toISOString()} ${url} ${s}\n`)
+        : () => {};
+    debug('scrape #0');
+
     // Sometimes waitForLoadState('load') waits too long for external resources like https://slackin.goswagger.io/badge.svg
     // So, use documentloaded instead of load and waitForSelector to wait for the selector.
     await this.page.goto(url, {waitUntil: 'domcontentloaded'});
+    debug('scrape #1 ${selector} waitForSelector start');
+
+    // Request “github.com/aws/aws-sdk-go-v2@v1.20.3” というようなボタンが表示されている場合は、スキップ
+    const requestButton = this.page.locator('[data-test-id="fetch-button"]');
+    if (await requestButton.isVisible()) {
+      await requestButton.click();
+      throw new Error(`skip ${url} the page is not ready`);
+    }
     await this.page.waitForSelector(selector);
+    debug('scrape #2 ${selector} waitForSelector finish');
 
     // await page.pause();
-    return (await this.page.textContent(selector))?.trim();
+    const scraped = await this.page.textContent(selector);
+    debug('scrape #3 ${selector} got text ${scraped}');
+
+    return scraped?.trim();
   }
 
   async getLicenseAndUrl(
