@@ -34,13 +34,36 @@ export class Scraper implements Processor {
   ) {}
 
   async scrape(url: string, selector: string): Promise<string | undefined> {
+    const t0 = Date.now();
+    if (process.env.DEBUG === 'true') {
+      process.stderr.write(`scrape #0: ${url}\n`);
+    }
     // Sometimes waitForLoadState('load') waits too long for external resources like https://slackin.goswagger.io/badge.svg
     // So, use documentloaded instead of load and waitForSelector to wait for the selector.
     await this.page.goto(url, {waitUntil: 'domcontentloaded'});
+    if (process.env.DEBUG === 'true') {
+      process.stderr.write(
+        `scrape #1: ${url} ${
+          Date.now() - t0
+        } page opened. waiting for ${selector}\n`
+      );
+    }
+
     await this.page.waitForSelector(selector);
+    if (process.env.DEBUG === 'true') {
+      process.stderr.write(
+        `scrape #2: ${url} ${Date.now() - t0} waitForSelector OK\n`
+      );
+    }
 
     // await page.pause();
-    return (await this.page.textContent(selector))?.trim();
+    const scraped = await this.page.textContent(selector);
+    if (process.env.DEBUG === 'true') {
+      process.stderr.write(
+        `scrape #9: ${url} ${Date.now() - t0} msec scraped: ${scraped} \n`
+      );
+    }
+    return scraped?.trim();
   }
 
   async getLicenseAndUrl(
