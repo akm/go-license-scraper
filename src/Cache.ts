@@ -27,7 +27,10 @@ export class Cache {
 }
 
 export class CacheProcessor implements Processor {
-  constructor(private readonly impl: Processor, readonly cache: Cache) {}
+  constructor(
+    private readonly impl: Processor,
+    readonly cache: Cache
+  ) {}
 
   async process(mod: Module): Promise<License> {
     const value = this.cache.get(mod);
