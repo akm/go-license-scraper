@@ -36,6 +36,15 @@ const main = async () => {
 
   const golist = spawn('go', ['list', '-m ', '-json', 'all'], {shell: true});
 
+  golist.on('exit', code => {
+    if (code !== 0) {
+      process.stderr.write(
+        'go list failed. Try `go list -m -json all` manually\n'
+      );
+      exit(1);
+    }
+  });
+
   let input_string = '';
 
   golist.stdout.on('data', chunk => {
